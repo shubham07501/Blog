@@ -1,0 +1,44 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'blogs/style.css' %}" />
+<body id='body1'>
+<div id="mySidenav" class="sidenav">
+  <a href="{% url 'home:main' %}" id='home'>Home</a>
+  <a href="{% url 'blogs:show_all' %}" id="blogs">All Blogs</a>
+  <a href="{% url 'blogs:all_bloggers' %}" id="bloggers">Bloggers</a>
+  <a href="{% url 'home:about_us' %}" id="about">About Us</a>
+  <a href="{% url 'home:contact_us' %}" id="contact">Contact Us</a>
+
+
+  {% if request.user.is_authenticated %}
+  <a href="{% url 'logout' %}" id='log'>Logout</a>
+  
+  {% elif not request.user.is_authenticated %}
+	<a href="{% url 'login' %}" id="log">Login</a>
+  {% endif %}
+
+</div>
+
+<h1 id='h101'>{{ blog.post_title|title }}</h1>
+<h2 id='h201'>By - <span id='span01'>{{blog.blogger}}</span></h2>
+<h2 id='h202'>Date - <span id='span02'>{{blog.pub_date.date}}</span></h2>
+<h2 id='h202'>Time - <span id='span02'>{{blog.pub_date.time}}</span></h2>
+
+<p id='p02'>{{blog.post_detail}}</p>
+
+<hr>
+{% if request.user.is_authenticated %}
+<a href="{% url 'blogs:add_comment_to_post' blog.id %}">Add comment</a>
+{% else %}
+<p><a href="{% url 'login' %}">Sign In</a> To Add Comments</p>
+{% endif %}
+
+{% for comment in comment %}
+    <div class="comment">
+        <div>{{ comment.created_date }}</div>
+        <strong>{{ comment.author }}</strong>
+        <p>{{ comment.text|linebreaks }}</p>
+    </div>
+{% empty %}
+    <p>No comments here yet. Be the first one to write comment</p>
+{% endfor %}
+

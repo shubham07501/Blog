@@ -1,0 +1,30 @@
+{% load static %}
+<link rel='stylesheet' type="text/css" href="{% static 'home/style.css' %}" />
+<body id='body1'>
+
+<div id="mySidenav1" class="sidenav">
+  <a id="home">Home</a>
+ </div>
+<div id="mySidenav" class="sidenav">
+  <a href="{% url 'blogs:show_all' %}" id="blogs">All Blogs</a>
+  <a href="{% url 'blogs:all_bloggers' %}" id="bloggers">Bloggers</a>
+  <a href="{% url 'home:about_us' %}" id="about">About Us</a>
+  <a href="{% url 'home:contact_us' %}" id="contact">Contact Us</a>
+  {% if request.user.is_authenticated %}
+  <a href="{% url 'logout' %}" id='log'>Logout</a>
+  
+  {% elif not request.user.is_authenticated %}
+	<a href="{% url 'login' %}" id="log">Login</a>
+  {% endif %}
+  
+  {% if request.user.is_authenticated and blogger %}
+  <a href="{% url 'blogs:register_blogger' %}" id="register_blogger">Become Blogger</a>
+  {% endif %}
+  
+  
+</div>
+{% if request.user.is_anonymous %}
+<p id="p01">Welcome, User<br></p>
+{% else %}
+<p id="p01">Welcome, {{request.user|title}}</p>
+{% endif %}

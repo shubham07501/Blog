@@ -1,0 +1,54 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'blogs/style.css' %}" />
+<body id='body1'>
+
+<div id="mySidenav1" class="sidenav">
+  <a id="blogs">All Blogs</a>
+</div>
+<div id="mySidenav" class="sidenav">
+  <a href="{% url 'home:main' %}" id='home'>Home</a>
+  <a href="{% url 'blogs:all_bloggers' %}" id="bloggers">Bloggers</a>
+  <a href="{% url 'home:about_us' %}" id="about">About Us</a>
+  <a href="{% url 'home:contact_us' %}" id="contact">Contact Us</a>
+  {% if request.user.is_authenticated %}
+  <a href="{% url 'logout' %}" id='log'>Logout</a>
+  
+  {% elif not request.user.is_authenticated %}
+  <a href="{% url 'login' %}" id="log">Login</a>
+  {% endif %}
+</div>
+
+<h1 id='h101'>All Blogs</h1>
+
+  {% if request.user.is_authenticated and blogger.blogger_name != None %}
+<center><a id="a03" href="{% url 'blogs:add_post' %}"><button id="button1">Add Post</button></a></center>
+  {% endif %}
+
+{% if blog_list %}
+<ul>
+	{% for blog in blog_list %}
+	<li><a href="{% url "blogs:details" blog.id %}">{{blog.post_title|title}}<br /></a></li><p id='p01'><small>Author -<a href="{% url 'blogs:blogger_details' blog.blogger.id %}">{{blog.blogger}}</a> -- Published Date -{{blog.pub_date}}</small></p><br />
+	{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if blog_list.has_previous %}
+            <a id='a01' href="?page=1">&laquo; First</a>
+            <a id='a01' href="?page={{ blog_list.previous_page_number }}"> Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ blog_list.number }} of {{ blog_list.paginator.num_pages }}.
+        </span>
+
+        {% if blog_list.has_next %}
+            <a id='a01' href="?page={{ blog_list.next_page_number }}">Next</a>
+            <a id='a01' href="?page={{ blog_list.paginator.num_pages }}">Last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+	
+</ul>
+{% else %}
+	<p>Currently No Blogs Are Available</p>
+{% endif %}
